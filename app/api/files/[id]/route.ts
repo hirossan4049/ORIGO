@@ -14,7 +14,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const script = await prisma.script.findFirst({
+    const file = await prisma.file.findFirst({
       where: {
         id: params.id,
         project: {
@@ -27,13 +27,13 @@ export async function GET(
       }
     })
 
-    if (!script) {
-      return NextResponse.json({ error: 'Script not found' }, { status: 404 })
+    if (!file) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ script })
+    return NextResponse.json({ file })
   } catch (error) {
-    console.error('Get script error:', error)
+    console.error('Get file error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -52,9 +52,9 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { name, code, language } = await req.json()
+    const { name, content, language } = await req.json()
 
-    const script = await prisma.script.updateMany({
+    const file = await prisma.file.updateMany({
       where: {
         id: params.id,
         project: {
@@ -63,18 +63,18 @@ export async function PUT(
       },
       data: {
         name,
-        code,
+        content,
         language
       }
     })
 
-    if (script.count === 0) {
-      return NextResponse.json({ error: 'Script not found' }, { status: 404 })
+    if (file.count === 0) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Update script error:', error)
+    console.error('Update file error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -93,7 +93,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const script = await prisma.script.deleteMany({
+    const file = await prisma.file.deleteMany({
       where: {
         id: params.id,
         project: {
@@ -102,13 +102,13 @@ export async function DELETE(
       }
     })
 
-    if (script.count === 0) {
-      return NextResponse.json({ error: 'Script not found' }, { status: 404 })
+    if (file.count === 0) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Delete script error:', error)
+    console.error('Delete file error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

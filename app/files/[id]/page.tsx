@@ -30,10 +30,10 @@ interface Execution {
   endedAt: string | null
 }
 
-interface Script {
+interface File {
   id: string
   name: string
-  code: string
+  content: string
   language: string
   projectId: string
   project: {
@@ -53,11 +53,11 @@ interface LocalStorageItem {
   value: string
 }
 
-export default function ScriptPage({ params }: { params: { id: string } }) {
+export default function FilePage({ params }: { params: { id: string } }) {
   const { status } = useSession()
   const router = useRouter()
-  const [script, setScript] = useState<Script | null>(null)
-  const [code, setCode] = useState('')
+  const [file, setFile] = useState<File | null>(null)
+  const [content, setContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [showScheduleModal, setShowScheduleModal] = useState(false)
@@ -80,19 +80,19 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
     if (status === 'unauthenticated') {
       router.push('/login')
     } else if (status === 'authenticated') {
-      fetchScript()
+      fetchFile()
       fetchExecutions()
     }
   }, [status, router, params])
 
-  const fetchScript = async () => {
+  const fetchFile = async () => {
     try {
-      const response = await fetch(`/api/scripts/${params.id}`)
+      const response = await fetch(`/api/files/${params.id}`)
       const data = await response.json()
-      setScript(data.script)
-      setCode(data.script.code)
+      setFile(data.file)
+      setContent(data.file.content)
     } catch (error) {
-      console.error('Error fetching script:', error)
+      console.error('Error fetching file:', error)
     } finally {
       setLoading(false)
     }
@@ -100,7 +100,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
 
   const fetchExecutions = async () => {
     try {
-      const response = await fetch(`/api/scripts/${params.id}/executions`)
+      const response = await fetch(`/api/files/${params.id}/executions`)
       const data = await response.json()
       setExecutions(data.executions || [])
     } catch (error) {
@@ -108,32 +108,32 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
     }
   }
 
-  const saveScript = async () => {
+  const saveFile = async () => {
     setSaving(true)
     try {
-      const response = await fetch(`/api/scripts/${params.id}`, {
+      const response = await fetch(`/api/files/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: script?.name,
-          code,
-          language: script?.language
+          name: file?.name,
+          content,
+          language: file?.language
         })
       })
 
       if (response.ok) {
-        alert('Script saved successfully')
+        alert('File saved successfully')
       }
     } catch (error) {
-      console.error('Error saving script:', error)
+      console.error('Error saving file:', error)
     } finally {
       setSaving(false)
     }
   }
 
-  const executeScript = async () => {
+  const executeFile = async () => {
     try {
       // Convert env vars array to object
       const envVarsObj: Record<string, string> = {}
@@ -151,7 +151,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
         }
       })
 
-      const response = await fetch(`/api/scripts/${params.id}/execute`, {
+      const response = await fetch(`/api/files/${params.id}/execute`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -169,7 +169,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
       // Refresh executions after running
       setTimeout(() => fetchExecutions(), 1000)
     } catch (error) {
-      console.error('Error executing script:', error)
+      console.error('Error executing file:', error)
       setExecuteResult({ success: false, error: 'Failed to execute' })
     }
   }
@@ -214,7 +214,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          scriptId: params.id,
+          fileId: params.id,
           cronExpression: getCronExpression(),
           functionName,
           envVars: envVarsObj,
@@ -224,7 +224,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
 
       if (response.ok) {
         setShowScheduleModal(false)
-        fetchScript()
+        fetchFile()
         alert('Schedule created successfully')
       }
     } catch (error) {
@@ -242,7 +242,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
       })
 
       if (response.ok) {
-        fetchScript()
+        fetchFile()
       }
     } catch (error) {
       console.error('Error deleting schedule:', error)
@@ -281,20 +281,20 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
     return <div className="container">Loading...</div>
   }
 
-  if (!script) {
-    return <div className="container">Script not found</div>
+  if (!file) {
+    return <div className="container">File not found</div>
   }
 
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{script.name}</h1>
-          <p className="text-gray-600">{script.language}</p>
+          <h1 className="text-3xl font-bold text-gray-900">{file.name}</h1>
+          <p className="text-gray-600">{file.language}</p>
         </div>
         <div className="flex space-x-4">
-          <Link href={`/projects/${script.projectId}`} className="text-blue-600 hover:underline">
-            Back to {script.project.name}
+          <Link href={`/projects/${file.projectId}`} className="text-blue-600 hover:underline">
+            Back to {file.project.name}
           </Link>
           <Link href="/dashboard" className="text-blue-600 hover:underline">
             Dashboard
@@ -324,10 +324,10 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
             <div className="border border-gray-300 rounded-md overflow-hidden">
               <MonacoEditor
                 height="500px"
-                language={script.language === 'typescript' ? 'typescript' : 'javascript'}
+                language={file.language === 'typescript' ? 'typescript' : 'javascript'}
                 theme="vs-dark"
-                value={code}
-                onChange={(value) => setCode(value || '')}
+                value={content}
+                onChange={(value) => setContent(value || '')}
                 options={{
                   minimap: { enabled: true },
                   fontSize: 14,
@@ -338,14 +338,14 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
               />
             </div>
             <div className="mt-4">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={saveScript} disabled={saving}>
-                {saving ? 'Saving...' : 'Save Code'}
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={saveFile} disabled={saving}>
+                {saving ? 'Saving...' : 'Save File'}
               </button>
             </div>
           </div>
 
           <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Execute Script</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Execute File</h2>
             <div className="mb-4">
               <label htmlFor="functionName" className="block text-sm font-medium text-gray-700 mb-1">Function Name</label>
               <input
@@ -420,7 +420,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
               </button>
             </div>
 
-            <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={executeScript}>
+            <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={executeFile}>
               Execute Now
             </button>
             {executeResult && (
@@ -506,10 +506,10 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
             )}
 
             <div className="mt-6">
-              {script.schedules.length === 0 ? (
+              {file.schedules.length === 0 ? (
                 <p className="text-gray-600">No schedules configured</p>
               ) : (
-                script.schedules.map((schedule) => (
+                file.schedules.map((schedule) => (
                   <div
                     key={schedule.id}
                     className={`border border-gray-200 rounded-lg p-4 mb-4 ${schedule.enabled ? 'bg-white' : 'bg-gray-50'}`}
@@ -544,7 +544,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Execution Logs</h2>
           {executions.length === 0 ? (
-            <p className="text-gray-600">No executions yet. Run the script to see logs here.</p>
+            <p className="text-gray-600">No executions yet. Run the file to see logs here.</p>
           ) : (
             <div className="max-h-96 overflow-y-auto pr-2">
               {executions.map((execution) => (

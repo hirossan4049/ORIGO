@@ -1,0 +1,45 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e7]: O
+        - heading "ORIGO" [level=1] [ref=e8]
+      - navigation [ref=e9]:
+        - generic [ref=e10]:
+          - link "Projects" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e12]
+            - generic [ref=e14]: Projects
+          - link "Files" [ref=e15] [cursor=pointer]:
+            - /url: /files
+            - img [ref=e16]
+            - generic [ref=e18]: Files
+          - link "Schedules" [ref=e19] [cursor=pointer]:
+            - /url: /schedules
+            - img [ref=e20]
+            - generic [ref=e22]: Schedules
+    - generic [ref=e23]:
+      - banner [ref=e24]:
+        - generic [ref=e25]:
+          - heading "Apps Script Projects" [level=2] [ref=e26]
+          - generic [ref=e28]: user@example.com
+      - main [ref=e29]:
+        - generic [ref=e30]:
+          - heading "All Schedules" [level=1] [ref=e31]
+          - generic [ref=e32]:
+            - table [ref=e33]:
+              - rowgroup [ref=e34]:
+                - row "Status File Function Cron Expression Edit" [ref=e35]:
+                  - columnheader "Status" [ref=e36]
+                  - columnheader "File" [ref=e37]
+                  - columnheader "Function" [ref=e38]
+                  - columnheader "Cron Expression" [ref=e39]
+                  - columnheader "Edit" [ref=e40]:
+                    - generic [ref=e41]: Edit
+              - rowgroup
+            - paragraph [ref=e43]: No schedules found.
+  - alert [ref=e44]
+```

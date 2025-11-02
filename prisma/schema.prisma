@@ -27,15 +27,15 @@ model Project {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  scripts     Script[]
+  files       File[]
   
   @@index([userId])
 }
 
-model Script {
+model File {
   id          String      @id @default(cuid())
   name        String
-  code        String
+  content     String
   language    String      @default("javascript")
   projectId   String
   project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -49,8 +49,8 @@ model Script {
 
 model Schedule {
   id         String   @id @default(cuid())
-  scriptId   String
-  script     Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  fileId     String
+  file       File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
   cronExpression String
   functionName   String
   enabled    Boolean  @default(true)
@@ -59,18 +59,18 @@ model Schedule {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   
-  @@index([scriptId])
+  @@index([fileId])
 }
 
 model Execution {
   id        String   @id @default(cuid())
-  scriptId  String
-  script    Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  fileId    String
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
   status    String   // success, error, running
   output    String?
   error     String?
   startedAt DateTime @default(now())
   endedAt   DateTime?
   
-  @@index([scriptId])
+  @@index([fileId])
 }

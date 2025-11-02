@@ -14,8 +14,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Verify script belongs to user
-    const script = await prisma.script.findFirst({
+    // Verify file belongs to user
+    const file = await prisma.file.findFirst({
       where: {
         id: params.id,
         project: {
@@ -24,14 +24,14 @@ export async function GET(
       }
     })
 
-    if (!script) {
-      return NextResponse.json({ error: 'Script not found' }, { status: 404 })
+    if (!file) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
-    // Get executions for this script
+    // Get executions for this file
     const executions = await prisma.execution.findMany({
       where: {
-        scriptId: params.id
+        fileId: params.id
       },
       orderBy: {
         startedAt: 'desc'

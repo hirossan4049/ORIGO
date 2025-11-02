@@ -9,7 +9,7 @@ interface Project {
   name: string
   description: string | null
   createdAt: string
-  scripts: Array<{ id: string; name: string }>
+  files: Array<{ id: string; name: string }>
 }
 
 export default function DashboardPage() {
@@ -20,6 +20,8 @@ export default function DashboardPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [newProjectName, setNewProjectName] = useState('')
   const [newProjectDescription, setNewProjectDescription] = useState('')
+  const [createLoading, setCreateLoading] = useState(false)
+  const [createError, setCreateError] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -45,6 +47,9 @@ export default function DashboardPage() {
 
   const createProject = async (e: React.FormEvent) => {
     e.preventDefault()
+    setCreateLoading(true)
+    setCreateError('')
+
     try {
       const response = await fetch('/api/projects', {
         method: 'POST',
@@ -58,13 +63,21 @@ export default function DashboardPage() {
       })
 
       if (response.ok) {
+        const data = await response.json()
         setNewProjectName('')
         setNewProjectDescription('')
         setShowCreateModal(false)
-        fetchProjects()
+        // Navigate to the new project
+        router.push(`/projects/${data.project.id}`)
+      } else {
+        const errorData = await response.json()
+        setCreateError(errorData.error || 'Failed to create project')
       }
     } catch (error) {
       console.error('Error creating project:', error)
+      setCreateError('Failed to create project')
+    } finally {
+      setCreateLoading(false)
     }
   }
 
@@ -93,41 +106,56 @@ export default function DashboardPage() {
             <h3 className="text-xl font-bold text-gray-900">Create project</h3>
             <p className="text-gray-600">Create a new Apps Script project</p>
           </div>
-          <div className="p-6">
-            <form onSubmit={createProject} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Title</label>
-                <input
-                  id="name"
-                  type="text"
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  placeholder="Untitled project"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  required
-                />
+          <form onSubmit={createProject} className="space-y-4">
+            <div className="p-6">
+              <div className="space-y-4">
+                {createError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                    {createError}
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Title</label>
+                  <input
+                    id="name"
+                    type="text"
+                    value={newProjectName}
+                    onChange={(e) => setNewProjectName(e.target.value)}
+                    placeholder="Untitled project"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    required
+                    disabled={createLoading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                  <input
+                    id="description"
+                    type="text"
+                    value={newProjectDescription}
+                    onChange={(e) => setNewProjectDescription(e.target.value)}
+                    placeholder="Project description (optional)"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    disabled={createLoading}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                <input
-                  id="description"
-                  type="text"
-                  value={newProjectDescription}
-                  onChange={(e) => setNewProjectDescription(e.target.value)}
-                  placeholder="Project description (optional)"
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                />
-              </div>
-            </form>
-          </div>
-          <div className="p-6 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
-            <button onClick={() => setShowCreateModal(false)} className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 transition-colors">
-              Cancel
-            </button>
-            <button onClick={createProject} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">
-              Create
-            </button>
-          </div>
+            </div>
+            <div className="p-6 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+              <button type="button" onClick={() => setShowCreateModal(false)} disabled={createLoading} className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 transition-colors disabled:opacity-50">
+                Cancel
+              </button>
+              <button type="submit" disabled={createLoading} className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center">
+                {createLoading && (
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
+                Create
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
@@ -184,7 +212,7 @@ export default function DashboardPage() {
                       {project.description || "No description"}
                     </td>
                     <td className="px-6 py-4">
-                      {project.scripts.length} file{project.scripts.length !== 1 ? 's' : ''}
+                      {project.files.length} file{project.files.length !== 1 ? 's' : ''}
                     </td>
                     <td className="px-6 py-4">
                       {new Date(project.createdAt).toLocaleDateString()}

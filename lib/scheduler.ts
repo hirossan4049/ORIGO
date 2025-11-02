@@ -10,7 +10,7 @@ export async function initScheduler() {
   // Load all enabled schedules from database
   const schedules = await prisma.schedule.findMany({
     where: { enabled: true },
-    include: { script: true }
+    include: { file: true }
   })
 
   for (const schedule of schedules) {
@@ -49,7 +49,7 @@ export function startSchedule(schedule: any) {
       console.error(`Failed to parse localStorage for schedule ${schedule.id}:`, error)
     }
 
-    await executeScript(schedule.scriptId, schedule.functionName, {
+    await executeScript(schedule.fileId, schedule.functionName, {
       env: envVars,
       localStorage
     })

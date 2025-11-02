@@ -24,8 +24,8 @@ export async function POST(
       )
     }
 
-    // Verify script belongs to user
-    const script = await prisma.script.findFirst({
+    // Verify file belongs to user
+    const file = await prisma.file.findFirst({
       where: {
         id: params.id,
         project: {
@@ -34,18 +34,18 @@ export async function POST(
       }
     })
 
-    if (!script) {
-      return NextResponse.json({ error: 'Script not found' }, { status: 404 })
+    if (!file) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
-    const result = await executeScript(params.id, functionName, {
+    const result = await executeScript(params.id, functionName, file.content, {
       env: envVars || {},
       localStorage: localStorage || {}
     })
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error('Execute script error:', error)
+    console.error('Execute file error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

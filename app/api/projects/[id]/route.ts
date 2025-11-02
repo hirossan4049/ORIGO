@@ -20,7 +20,7 @@ export async function GET(
         userId: session.user.id
       },
       include: {
-        scripts: true
+        files: true
       }
     })
 

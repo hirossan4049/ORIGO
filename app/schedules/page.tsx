@@ -10,7 +10,7 @@ interface Schedule {
   cronExpression: string
   functionName: string
   enabled: boolean
-  script: {
+  file: {
     id: string
     name: string
   }
@@ -54,7 +54,7 @@ export default function SchedulesPage() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3">Status</th>
-              <th scope="col" className="px-6 py-3">Script</th>
+              <th scope="col" className="px-6 py-3">File</th>
               <th scope="col" className="px-6 py-3">Function</th>
               <th scope="col" className="px-6 py-3">Cron Expression</th>
               <th scope="col" className="px-6 py-3"><span className="sr-only">Edit</span></th>
@@ -69,12 +69,12 @@ export default function SchedulesPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                  <Link href={`/scripts/${schedule.script.id}`} className="hover:underline">{schedule.script.name}</Link>
+                  <Link href={`/files/${schedule.file.id}`} className="hover:underline">{schedule.file.name}</Link>
                 </td>
                 <td className="px-6 py-4">{schedule.functionName}</td>
                 <td className="px-6 py-4">{schedule.cronExpression}</td>
                 <td className="px-6 py-4 text-right">
-                  <Link href={`/scripts/${schedule.script.id}`} className="font-medium text-blue-600 hover:underline">Edit</Link>
+                  <Link href={`/files/${schedule.file.id}`} className="font-medium text-blue-600 hover:underline">Edit</Link>
                 </td>
               </tr>
             ))}

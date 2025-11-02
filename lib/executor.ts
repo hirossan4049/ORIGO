@@ -6,27 +6,20 @@ export interface ExecutionContext {
 }
 
 export async function executeScript(
-  scriptId: string,
+  fileId: string,
   functionName: string,
+  content: string,
   context: ExecutionContext
 ) {
   const execution = await prisma.execution.create({
     data: {
-      scriptId,
+      fileId,
       status: 'running',
       startedAt: new Date()
     }
   })
 
   try {
-    const script = await prisma.script.findUnique({
-      where: { id: scriptId }
-    })
-
-    if (!script) {
-      throw new Error('Script not found')
-    }
-
     // Create output buffer to capture console logs
     const outputBuffer: string[] = []
     
@@ -69,7 +62,7 @@ export async function executeScript(
     // This provides basic isolation but note: not suitable for untrusted code
     const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
     const fn = new AsyncFunction('console', 'env', 'localStorage', `
-      ${script.code}
+      ${content}
       
       // Call the specified function
       if (typeof ${functionName} === 'function') {

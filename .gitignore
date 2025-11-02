@@ -43,3 +43,4 @@ prisma/migrations/
 
 # bun
 bun.lockb
+.env.test
