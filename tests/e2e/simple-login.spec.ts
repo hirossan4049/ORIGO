@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 const user = {
   email: process.env.TEST_USER_EMAIL!,
