@@ -15,24 +15,26 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { cronExpression, functionName, envVars, localStorage, enabled } = await req.json()
+    const { cronExpression, functionName, envVars, localStorage, enabled, runtime } = await req.json()
+
+    const updateData: any = {}
+    if (cronExpression !== undefined) updateData.cronExpression = cronExpression
+    if (functionName !== undefined) updateData.functionName = functionName
+    if (envVars !== undefined) updateData.envVars = envVars ? JSON.stringify(envVars) : null
+    if (localStorage !== undefined) updateData.localStorage = localStorage ? JSON.stringify(localStorage) : null
+    if (enabled !== undefined) updateData.enabled = enabled
+    if (runtime !== undefined) updateData.runtime = runtime
 
     const updated = await prisma.schedule.updateMany({
       where: {
         id: params.id,
-        script: {
+        file: {
           project: {
             userId: session.user.id
           }
         }
       },
-      data: {
-        cronExpression,
-        functionName,
-        envVars: envVars ? JSON.stringify(envVars) : null,
-        localStorage: localStorage ? JSON.stringify(localStorage) : null,
-        enabled
-      }
+      data: updateData
     })
 
     if (updated.count === 0) {
@@ -79,7 +81,7 @@ export async function DELETE(
     const schedule = await prisma.schedule.deleteMany({
       where: {
         id: params.id,
-        script: {
+        file: {
           project: {
             userId: session.user.id
           }

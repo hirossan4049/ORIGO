@@ -15,7 +15,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { functionName, envVars, localStorage } = await req.json()
+    const { functionName, envVars, localStorage, runtime } = await req.json()
 
     if (!functionName) {
       return NextResponse.json(
@@ -38,10 +38,13 @@ export async function POST(
       return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
+    // Use runtime from request or fallback to file's runtime setting
+    const selectedRuntime = runtime || file.runtime || 'nodejs'
+
     const result = await executeScript(params.id, functionName, file.content, {
       env: envVars || {},
       localStorage: localStorage || {}
-    })
+    }, selectedRuntime as 'nodejs' | 'deno')
 
     return NextResponse.json(result)
   } catch (error) {
