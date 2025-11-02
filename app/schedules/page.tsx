@@ -48,7 +48,10 @@ export default function SchedulesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">All Schedules</h1>
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Schedules</h1>
+        <p className="text-gray-600 mt-1">Manage your scheduled executions</p>
+      </div>
       <div className="bg-white shadow-md rounded-lg">
         <table className="w-full text-sm text-left text-gray-600">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -62,7 +65,7 @@ export default function SchedulesPage() {
           </thead>
           <tbody>
             {schedules.map((schedule) => (
-              <tr key={schedule.id} className="bg-white border-b hover:bg-gray-50">
+              <tr key={schedule.id} className="bg-white border-b hover:bg-gray-50" data-testid="schedule-card">
                 <td className="px-6 py-4">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${schedule.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {schedule.enabled ? 'Enabled' : 'Disabled'}

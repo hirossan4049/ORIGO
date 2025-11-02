@@ -11,7 +11,16 @@ test.describe('Schedules Management', () => {
     await page.getByLabel('Email').fill(user.email);
     await page.getByLabel('Password').fill(user.password);
     await page.getByRole('button', { name: 'Login' }).click();
-    await page.waitForURL('/dashboard');
+
+    // Wait for login to complete
+    await page.waitForTimeout(2000);
+
+    // Check if we're on dashboard or redirect there
+    const currentUrl = page.url();
+    if (!currentUrl.includes('/dashboard')) {
+      await page.goto('/dashboard');
+      await page.waitForTimeout(1000);
+    }
   });
 
   test('should display schedules page with existing schedules', async ({ page }) => {

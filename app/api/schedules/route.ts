@@ -14,14 +14,14 @@ export async function GET(req: NextRequest) {
 
     const schedules = await prisma.schedule.findMany({
       where: {
-        script: {
+        file: {
           project: {
             userId: session.user.id
           }
         }
       },
       include: {
-        script: {
+        file: {
           select: {
             id: true,
             name: true
@@ -51,32 +51,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { scriptId, cronExpression, functionName, envVars, localStorage } = await req.json()
+    const { fileId, cronExpression, functionName, envVars, localStorage } = await req.json()
 
-    if (!scriptId || !cronExpression || !functionName) {
+    if (!fileId || !cronExpression || !functionName) {
       return NextResponse.json(
-        { error: 'scriptId, cronExpression, and functionName are required' },
+        { error: 'fileId, cronExpression, and functionName are required' },
         { status: 400 }
       )
     }
 
-    // Verify script belongs to user
-    const script = await prisma.script.findFirst({
+    // Verify file belongs to user
+    const file = await prisma.file.findFirst({
       where: {
-        id: scriptId,
+        id: fileId,
         project: {
           userId: session.user.id
         }
       }
     })
 
-    if (!script) {
-      return NextResponse.json({ error: 'Script not found' }, { status: 404 })
+    if (!file) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 })
     }
 
     const schedule = await prisma.schedule.create({
       data: {
-        scriptId,
+        fileId,
         cronExpression,
         functionName,
         envVars: envVars ? JSON.stringify(envVars) : null,

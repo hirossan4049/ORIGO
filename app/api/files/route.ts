@@ -17,6 +17,14 @@ export async function GET(req: NextRequest) {
           userId: session.user.id
         }
       },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      },
       orderBy: {
         updatedAt: 'desc'
       }

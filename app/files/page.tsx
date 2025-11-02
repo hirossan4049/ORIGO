@@ -11,6 +11,10 @@ interface File {
   language: string
   createdAt: string
   updatedAt: string
+  project: {
+    id: string
+    name: string
+  }
 }
 
 export default function FilesPage() {
@@ -45,7 +49,10 @@ export default function FilesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">All Files</h1>
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Files</h1>
+        <p className="text-gray-600 mt-1">Manage your files across all projects</p>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {files.length === 0 ? (
           <div className="col-span-full bg-white shadow-md rounded-lg p-8 text-center">
@@ -53,14 +60,17 @@ export default function FilesPage() {
           </div>
         ) : (
           files.map((file) => (
-            <div key={file.id} className="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between">
+            <div key={file.id} className="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between" data-testid="file-card">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">{file.name}</h3>
                 <p className="text-sm text-gray-500 mt-1">
+                  Project: {file.project.name}
+                </p>
+                <p className="text-sm text-gray-500">
                   {file.language} • Updated: {new Date(file.updatedAt).toLocaleDateString()}
                 </p>
               </div>
-              <Link href={`/files/${file.id}`} className="mt-4 inline-block text-right font-medium text-blue-600 hover:underline">Edit File</Link>
+              <Link href={`/files/${file.id}`} className="mt-4 inline-block text-right font-medium text-blue-600 hover:underline">Edit</Link>
             </div>
           ))
         )}
