@@ -34,22 +34,35 @@ export async function executeScript(
     const sandbox = {
       console: {
         log: (...args: any[]) => {
-          const message = args.map(arg => 
-            typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-          ).join(' ')
+          const message = args.map(arg => {
+            try {
+              return typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            } catch {
+              return '[Circular or Non-serializable]'
+            }
+          }).join(' ')
           outputBuffer.push(message)
           console.log('[Script]', message)
         },
         error: (...args: any[]) => {
-          const message = args.map(arg => 
-            typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-          ).join(' ')
+          const message = args.map(arg => {
+            try {
+              return typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+            } catch {
+              return '[Circular or Non-serializable]'
+            }
+          }).join(' ')
           outputBuffer.push('ERROR: ' + message)
           console.error('[Script]', message)
         }
       },
       env: context.env,
       localStorage: context.localStorage
+    }
+
+    // Validate function name to prevent code injection
+    if (!/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(functionName)) {
+      throw new Error('Invalid function name')
     }
 
     // Execute the script using Function constructor

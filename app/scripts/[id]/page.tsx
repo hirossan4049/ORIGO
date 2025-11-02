@@ -89,6 +89,27 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
 
   const executeScript = async () => {
     try {
+      let parsedEnvVars = {}
+      let parsedLocalStorage = {}
+
+      if (envVars) {
+        try {
+          parsedEnvVars = JSON.parse(envVars)
+        } catch {
+          setExecuteResult({ success: false, error: 'Invalid JSON in environment variables' })
+          return
+        }
+      }
+
+      if (localStorage) {
+        try {
+          parsedLocalStorage = JSON.parse(localStorage)
+        } catch {
+          setExecuteResult({ success: false, error: 'Invalid JSON in localStorage' })
+          return
+        }
+      }
+
       const response = await fetch(`/api/scripts/${params.id}/execute`, {
         method: 'POST',
         headers: {
@@ -96,8 +117,8 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
         },
         body: JSON.stringify({
           functionName: functionName || 'main',
-          envVars: envVars ? JSON.parse(envVars) : {},
-          localStorage: localStorage ? JSON.parse(localStorage) : {}
+          envVars: parsedEnvVars,
+          localStorage: parsedLocalStorage
         })
       })
 
@@ -112,6 +133,27 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
   const createSchedule = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      let parsedEnvVars = null
+      let parsedLocalStorage = null
+
+      if (envVars) {
+        try {
+          parsedEnvVars = JSON.parse(envVars)
+        } catch {
+          alert('Invalid JSON in environment variables')
+          return
+        }
+      }
+
+      if (localStorage) {
+        try {
+          parsedLocalStorage = JSON.parse(localStorage)
+        } catch {
+          alert('Invalid JSON in localStorage')
+          return
+        }
+      }
+
       const response = await fetch('/api/schedules', {
         method: 'POST',
         headers: {
@@ -121,8 +163,8 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
           scriptId: params.id,
           cronExpression,
           functionName,
-          envVars: envVars ? JSON.parse(envVars) : null,
-          localStorage: localStorage ? JSON.parse(localStorage) : null
+          envVars: parsedEnvVars,
+          localStorage: parsedLocalStorage
         })
       })
 
@@ -133,6 +175,7 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
       }
     } catch (error) {
       console.error('Error creating schedule:', error)
+      alert('Failed to create schedule')
     }
   }
 
