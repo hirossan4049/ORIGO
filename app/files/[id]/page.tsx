@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { AppLayout } from "@/app/components/AppLayout";
 import { CodeEditor } from "@/app/components/CodeEditor";
 import { ExecutionPanel } from "@/app/components/ExecutionPanel";
@@ -20,6 +22,8 @@ export default function FilePage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"editor" | "execution">("editor");
   const executionPanelRef = useRef<{ runMainFunction: () => void }>(null);
+  const { status } = useSession();
+  const router = useRouter();
 
   const fetchFile = useCallback(async () => {
     setLoading(true);
@@ -41,8 +45,10 @@ export default function FilePage({ params }: { params: { id: string } }) {
   }, [params.id]);
 
   useEffect(() => {
-    fetchFile();
-  }, [fetchFile]);
+    if (status === "authenticated") {
+      fetchFile();
+    }
+  }, [status, fetchFile]);
 
   useEffect(() => {
     // Simple regex to extract function names
@@ -58,10 +64,24 @@ export default function FilePage({ params }: { params: { id: string } }) {
 
   const handleRunClick = useCallback(() => {
     setActiveTab("execution");
-        if (executionPanelRef.current) {
+    if (executionPanelRef.current) {
       executionPanelRef.current.runMainFunction();
     }
   }, []);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return <div className="p-6">Loading...</div>;
+  }
+
+  if (status !== "authenticated") {
+    return null;
+  }
 
   if (loading) {
     return <AppLayout><div className="p-6">Loading...</div></AppLayout>;

@@ -56,6 +56,14 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
     }
   }
 
+  if (status === 'loading') {
+    return <div className="p-6">Loading...</div>
+  }
+
+  if (status !== 'authenticated') {
+    return null
+  }
+
   if (loading) {
     return <AppLayout><div className="p-6">Loading...</div></AppLayout>
   }
@@ -88,6 +96,4 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
     </AppLayout>
   )
 }
-
-
 
