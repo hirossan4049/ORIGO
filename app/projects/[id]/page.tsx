@@ -94,89 +94,91 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
   }
 
   if (loading) {
-    return <div className="container">Loading...</div>
+    return <div className="p-6">Loading...</div>
   }
 
   if (!project) {
-    return <div className="container">Project not found</div>
+    return <div className="p-6">Project not found</div>
   }
 
   return (
-    <div className="container">
-      <div className="header">
-        <h1>{project.name}</h1>
-        {project.description && <p>{project.description}</p>}
-        <div className="nav">
-          <Link href="/dashboard">Back to Dashboard</Link>
+    <div className="space-y-6">
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
+          {project.description && <p className="text-gray-600 mt-1">{project.description}</p>}
         </div>
+        <Link href="/dashboard" className="text-sm font-medium text-blue-600 hover:underline">Back to Dashboard</Link>
       </div>
 
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        <button className="button" onClick={() => setShowCreateModal(true)}>
+      <div className="flex space-x-3">
+        <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors" onClick={() => setShowCreateModal(true)}>
           Create New Script
         </button>
-        <button className="button button-danger" onClick={deleteProject}>
+        <button className="inline-flex items-center px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 transition-colors" onClick={deleteProject}>
           Delete Project
         </button>
       </div>
 
       {showCreateModal && (
-        <div className="card">
-          <h2>Create New Script</h2>
-          <form onSubmit={createScript}>
-            <div className="form-group">
-              <label htmlFor="name">Script Name</label>
-              <input
-                id="name"
-                type="text"
-                value={newScriptName}
-                onChange={(e) => setNewScriptName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="language">Language</label>
-              <select
-                id="language"
-                value={newScriptLanguage}
-                onChange={(e) => setNewScriptLanguage(e.target.value)}
-              >
-                <option value="javascript">JavaScript</option>
-                <option value="typescript">TypeScript</option>
-              </select>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button type="submit" className="button">
-                Create
-              </button>
-              <button
-                type="button"
-                className="button button-secondary"
-                onClick={() => setShowCreateModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+        <div className="bg-white shadow-md rounded-lg">
+          <div className="p-6 border-b border-gray-200">
+            <h3 className="text-xl font-bold text-gray-900">Create New Script</h3>
+          </div>
+          <div className="p-6">
+            <form onSubmit={createScript} className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Script Name</label>
+                <input
+                  id="name"
+                  type="text"
+                  value={newScriptName}
+                  onChange={(e) => setNewScriptName(e.target.value)}
+                  required
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="language" className="block text-sm font-medium text-gray-700">Language</label>
+                <select
+                  id="language"
+                  value={newScriptLanguage}
+                  onChange={(e) => setNewScriptLanguage(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="typescript">TypeScript</option>
+                </select>
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button type="button" className="px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 transition-colors" onClick={() => setShowCreateModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors">
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      <h2>Scripts</h2>
-      <div className="grid">
+      <h2 className="text-xl font-bold text-gray-900">Scripts</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {project.scripts.length === 0 ? (
-          <div className="card">
-            <p>No scripts yet. Create your first script!</p>
+          <div className="col-span-full bg-white shadow-md rounded-lg p-8 text-center">
+            <p className="text-gray-600">No scripts yet. Create your first script!</p>
           </div>
         ) : (
           project.scripts.map((script) => (
-            <div key={script.id} className="card">
-              <h3>{script.name}</h3>
-              <p style={{ fontSize: '12px', color: '#999' }}>
-                {script.language} • Updated: {new Date(script.updatedAt).toLocaleDateString()}
-              </p>
-              <Link href={`/scripts/${script.id}`}>
-                <button className="button">Edit Script</button>
-              </Link>
+            <div key={script.id} className="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">{script.name}</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {script.language} • Updated: {new Date(script.updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+              <Link href={`/scripts/${script.id}`} className="mt-4 inline-block text-right font-medium text-blue-600 hover:underline">Edit Script</Link>
             </div>
           ))
         )}
