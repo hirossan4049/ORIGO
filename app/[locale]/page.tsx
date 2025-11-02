@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { getTranslations } from 'next-intl/server'
+import { LanguageSwitcher } from '@/app/components/LanguageSwitcher'
 
 export default async function Home() {
   const session = await getServerSession(authOptions)
@@ -70,6 +71,7 @@ export default async function Home() {
               <span>ORIGO</span>
             </div>
             <div className="flex items-center gap-4 text-sm font-medium">
+              <LanguageSwitcher />
               <Link href="/login" className="text-slate-300 transition hover:text-white">
                 {t('nav.login')}
               </Link>

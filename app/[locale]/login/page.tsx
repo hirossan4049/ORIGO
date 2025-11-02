@@ -5,6 +5,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import { LanguageSwitcher } from '@/app/components/LanguageSwitcher'
 
 export default function LoginPage() {
   const t = useTranslations('login')
@@ -41,6 +42,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-lg">
+        <div className="flex justify-center mb-4">
+          <LanguageSwitcher />
+        </div>
         <h1 className="text-2xl font-bold text-center text-gray-900">{t('title')}</h1>
         {error && <div className="p-3 text-center text-sm text-red-600 bg-red-100 rounded-md">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-6">
