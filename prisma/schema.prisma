@@ -1,0 +1,76 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  scripts     Script[]
+  
+  @@index([userId])
+}
+
+model Script {
+  id          String      @id @default(cuid())
+  name        String
+  code        String
+  language    String      @default("javascript")
+  projectId   String
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  schedules   Schedule[]
+  executions  Execution[]
+  
+  @@index([projectId])
+}
+
+model Schedule {
+  id         String   @id @default(cuid())
+  scriptId   String
+  script     Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  cronExpression String
+  functionName   String
+  enabled    Boolean  @default(true)
+  envVars    String?  // JSON string
+  localStorage String? // JSON string
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@index([scriptId])
+}
+
+model Execution {
+  id        String   @id @default(cuid())
+  scriptId  String
+  script    Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
+  status    String   // success, error, running
+  output    String?
+  error     String?
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  
+  @@index([scriptId])
+}
