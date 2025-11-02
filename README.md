@@ -272,10 +272,11 @@ ORIGO/
 │   ├── api/            # API routes
 │   ├── components/     # React components
 │   ├── dashboard/      # Dashboard pages
+│   ├── files/          # Script/file editor pages
 │   ├── login/          # Login page
 │   ├── register/       # Registration page
 │   ├── projects/       # Project pages
-│   └── scripts/        # Script editor pages
+│   └── schedules/      # Schedule management pages
 ├── lib/                # Utility functions and configurations
 ├── prisma/             # Database schema and migrations
 ├── tests/              # End-to-end tests
