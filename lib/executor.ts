@@ -73,10 +73,14 @@ async function executeWithDeno(
 ): Promise<{ result: any; logs: string[] }> {
   return new Promise((resolve, reject) => {
     // Create a wrapper script that sets up the environment
+    // Serialize context data safely
+    const envJson = JSON.stringify(context.env).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
+    const localStorageJson = JSON.stringify(context.localStorage).replace(/</g, '\\u003c').replace(/>/g, '\\u003e')
+    
     const wrapperScript = `
 // Set up the environment
-const env = ${JSON.stringify(context.env)};
-const localStorage = ${JSON.stringify(context.localStorage)};
+const env = ${envJson};
+const localStorage = ${localStorageJson};
 
 // Override console to capture output
 const originalLog = console.log;
@@ -129,12 +133,15 @@ ${content}
 })();
 `
 
-    // Write the script to a temporary file
-    const tempFile = join(tmpdir(), `origo-${Date.now()}-${Math.random().toString(36).substring(7)}.ts`)
+    // Write the script to a temporary file with secure random name
+    const randomId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    const tempFile = join(tmpdir(), `origo-${randomId}-${Date.now()}.ts`)
     
     writeFile(tempFile, wrapperScript)
       .then(() => {
-        // Execute with Deno
+        // Execute with Deno with limited permissions
+        // Note: Using --allow-all for now. In production, consider more restrictive permissions
+        // based on your use case, e.g., --allow-read, --allow-write, --allow-net
         const denoProcess = spawn('deno', ['run', '--allow-all', tempFile], {
           env: { ...process.env, ...context.env }
         })
@@ -152,15 +159,17 @@ ${content}
 
         denoProcess.on('close', async (code) => {
           // Clean up temp file
-          await unlink(tempFile).catch(() => {})
+          await unlink(tempFile).catch((cleanupError) => {
+            console.error('Failed to cleanup temp file:', cleanupError)
+          })
 
           if (code !== 0) {
             reject(new Error(`Deno process exited with code ${code}: ${stderr}`))
             return
           }
 
-          // Extract result from stdout
-          const resultMatch = stdout.match(/__ORIGO_RESULT__(.+)/)
+          // Extract result from stdout (use non-greedy match)
+          const resultMatch = stdout.match(/__ORIGO_RESULT__(.+?)$/m)
           if (resultMatch) {
             try {
               const parsed = JSON.parse(resultMatch[1])
@@ -178,7 +187,9 @@ ${content}
         })
 
         denoProcess.on('error', async (error) => {
-          await unlink(tempFile).catch(() => {})
+          await unlink(tempFile).catch((cleanupError) => {
+            console.error('Failed to cleanup temp file:', cleanupError)
+          })
           reject(error)
         })
       })
