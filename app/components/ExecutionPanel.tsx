@@ -15,6 +15,7 @@ interface ExecutionLog {
   success: boolean;
   result?: any;
   error?: any;
+  consoleLogs?: string[];
 }
 
 export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPanelProps, ref) => {
@@ -38,26 +39,28 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
         body: JSON.stringify({ functionName: funcName }),
       });
       const result = await response.json();
-      setLogs([
+      setLogs(prevLogs => [
         {
           functionName: funcName,
           timestamp: startTime.toLocaleString(),
           success: result.success,
           result: result.result,
           error: result.error,
+          consoleLogs: result.logs,
         },
-        ...logs,
+        ...prevLogs,
       ]);
     } catch (error) {
       console.error("Error executing function:", error);
-      setLogs([
+      setLogs(prevLogs => [
         {
           functionName: funcName,
           timestamp: startTime.toLocaleString(),
           success: false,
           error: "An unexpected error occurred.",
+          consoleLogs: [],
         },
-        ...logs,
+        ...prevLogs,
       ]);
     } finally {
       setRunning(false);
@@ -103,7 +106,34 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
               <span className="font-semibold">{log.functionName}</span>
               <span className="text-gray-500 text-xs">{log.timestamp}</span>
             </div>
-            <pre className="mt-1 whitespace-pre-wrap">{log.success ? JSON.stringify(log.result, null, 2) : JSON.stringify(log.error, null, 2)}</pre>
+            {typeof log.result !== "undefined" && (
+              <div className="mt-2">
+                <span className="block text-xs font-semibold text-gray-600 uppercase tracking-wide">Result</span>
+                <pre className="mt-1 rounded bg-white/60 p-2 whitespace-pre-wrap text-gray-800">
+                  {JSON.stringify(log.result, null, 2)}
+                </pre>
+              </div>
+            )}
+            {log.error && (
+              <div className="mt-2">
+                <span className="block text-xs font-semibold text-gray-600 uppercase tracking-wide">Error</span>
+                <pre className="mt-1 rounded bg-white/60 p-2 whitespace-pre-wrap text-gray-800">
+                  {typeof log.error === "string" ? log.error : JSON.stringify(log.error, null, 2)}
+                </pre>
+              </div>
+            )}
+            {log.consoleLogs && log.consoleLogs.length > 0 && (
+              <div className="mt-2">
+                <span className="block text-xs font-semibold text-gray-600 uppercase tracking-wide">Console</span>
+                <div className="mt-1 space-y-1">
+                  {log.consoleLogs.map((entry, logIndex) => (
+                    <pre key={logIndex} className="rounded bg-black/80 p-2 text-xs text-green-200 whitespace-pre-wrap">
+                      {entry}
+                    </pre>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
