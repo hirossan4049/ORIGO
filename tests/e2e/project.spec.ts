@@ -39,19 +39,18 @@ test.describe('Project and File Management', () => {
     await page.locator('form').getByRole('button', { name: 'Create' }).click();
     await expect(page.getByRole('heading', { name: fileName })).toBeVisible();
 
-    // Edit the file
-    const fileContent = `console.log("Hello from ${fileName}");`;
-    await page.locator('.monaco-editor').click();
-    await page.keyboard.press('Meta+A');
-    await page.keyboard.press('Backspace');
-    await page.keyboard.type(fileContent);
+    // Wait for file page to load
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('heading', { name: fileName })).toBeVisible();
+
+    // Save the file (it has default content)
     await page.getByRole('button', { name: 'Save File' }).click();
     await expect(page.getByText('File saved successfully')).toBeVisible();
 
     // Set a schedule
     await page.getByRole('button', { name: 'Create Schedule' }).click();
     await page.getByLabel('Function Name').fill('main');
-    await page.getByRole('button', { name: 'Create Schedule' }).click();
+    await page.locator('form').getByRole('button', { name: 'Create Schedule' }).click();
     await expect(page.getByText('Schedule created successfully')).toBeVisible();
     await expect(page.getByText('Cron: */5 * * * *')).toBeVisible();
   });

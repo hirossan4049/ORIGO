@@ -29,13 +29,18 @@
       - main [ref=e29]:
         - generic [ref=e30]:
           - generic [ref=e31]:
-            - heading "Test Project 1762077912818" [level=1] [ref=e33]
+            - heading "Test Project 1762078816911" [level=1] [ref=e33]
             - link "Back to Dashboard" [ref=e34] [cursor=pointer]:
               - /url: /dashboard
           - generic [ref=e35]:
             - button "Create New File" [ref=e36] [cursor=pointer]
             - button "Delete Project" [ref=e37] [cursor=pointer]
           - heading "Files" [level=2] [ref=e38]
-          - paragraph [ref=e41]: No files yet. Create your first file!
-  - alert [ref=e42]
+          - generic [ref=e40]:
+            - generic [ref=e41]:
+              - heading "test-file-1762078816911.js" [level=3] [ref=e42]
+              - paragraph [ref=e43]: "javascript • Updated: 11/2/2025"
+            - link "Edit File" [ref=e44] [cursor=pointer]:
+              - /url: /files/cmhhk8f7u0043n7at5qzvdr2i
+  - alert [ref=e45]
 ```
