@@ -22,6 +22,27 @@ interface TriggersTabProps {
   projectId?: string;
 }
 
+const extractFunctionNames = (content: string): string[] => {
+  const patterns = [
+    /(?:^|\s)(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)/g,
+    /(?:^|\s)(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?\([^=]*\)\s*=>/g,
+    /(?:^|\s)(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?function\b/g,
+  ];
+
+  const names = new Set<string>();
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(content)) !== null) {
+      if (match[1]) {
+        names.add(match[1]);
+      }
+    }
+  }
+
+  return Array.from(names);
+};
+
 export function TriggersTab({ projectId }: TriggersTabProps) {
   const [triggers, setTriggers] = useState<Trigger[]>([]);
   const [projectFiles, setProjectFiles] = useState<ProjectFile[]>([]);
@@ -66,19 +87,17 @@ export function TriggersTab({ projectId }: TriggersTabProps) {
   }, [fetchTriggers, fetchProjectFiles]);
 
   useEffect(() => {
-    const functions: string[] = ["main"]; // Default function
+    const functions = new Set<string>(["main"]);
+
     if (selectedFileId) {
       const file = projectFiles.find(f => f.id === selectedFileId);
       if (file) {
-        const regex = /(?:function\s+)(\w+)\s*\(|(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>/g;
-        let match;
-        while ((match = regex.exec(file.content)) !== null) {
-          if (match[1]) functions.push(match[1]);
-          if (match[2]) functions.push(match[2]);
-        }
+        extractFunctionNames(file.content).forEach(name => functions.add(name));
       }
     }
-    setAvailableFunctions(Array.from(new Set(functions)));
+
+    const functionList = Array.from(functions);
+    setAvailableFunctions(functionList);
     setSelectedFunction("main");
   }, [selectedFileId, projectFiles]);
 
