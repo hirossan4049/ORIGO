@@ -13,9 +13,10 @@ ORIGO is a powerful, self-hosted platform that enables you to write, schedule, a
 - 🔐 **User Authentication**: Secure JWT-based authentication with NextAuth
 - 📁 **Project Management**: Create and organize multiple projects per account
 - 📝 **Code Editor**: Write and save TypeScript/JavaScript code
-- ⚡ **Script Execution**: Execute specific functions on demand
+- ⚡ **Script Execution**: Execute specific functions on demand with Node.js or Deno runtime
 - ⏰ **Scheduled Execution**: Configure automatic execution with cron expressions
 - 🔧 **Environment Configuration**: Set environment variables and localStorage for each schedule
+- 🚀 **Deno Support**: Choose between Node.js and Deno runtime for script execution
 - 📊 **Execution History**: View logs and execution results
 - 🐳 **Docker Support**: Easy deployment with Docker and docker-compose
 
@@ -37,6 +38,7 @@ ORIGO is a powerful, self-hosted platform that enables you to write, schedule, a
 ## 🛠️ Tech Stack
 
 - **Runtime**: [Bun](https://bun.sh/) - Fast JavaScript runtime
+- **Script Execution**: Node.js and [Deno](https://deno.com/) runtime support
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
 - **Authentication**: NextAuth with JWT
 - **Database**: SQLite with [Prisma](https://www.prisma.io/) ORM
@@ -207,6 +209,40 @@ Create schedules using the user-friendly dropdown interface:
 - `0 0 1 * *` - First day of every month
 
 Configure environment variables and localStorage for each schedule to customize execution behavior.
+
+#### 6. 🚀 Choose Your Runtime
+
+ORIGO supports both Node.js and Deno runtimes for script execution:
+
+**Node.js Runtime (Default)**
+- Uses the Function constructor for execution
+- Compatible with standard JavaScript/TypeScript
+- Good for simple scripts and quick prototyping
+
+**Deno Runtime**
+- More secure with explicit permissions
+- Built-in TypeScript support
+- Modern JavaScript features
+- Better for production workloads
+
+To select your preferred runtime:
+1. In the **Execution Panel**, use the runtime dropdown to select either "Node.js" or "Deno"
+2. Your choice will be used for that execution
+3. Each file can have a default runtime setting
+
+**Example with Deno:**
+```javascript
+function main() {
+  console.log('Running with Deno!');
+  console.log('Environment:', env);
+  return { success: true };
+}
+```
+
+Both runtimes provide:
+- Access to environment variables via `env`
+- Access to local storage via `localStorage`
+- Console logging via `console.log()` and `console.error()`
 
 ## 🔌 API Routes
 
