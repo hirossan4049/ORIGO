@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
@@ -13,6 +14,7 @@ interface CreateProjectDialogProps {
 }
 
 export function CreateProjectDialog({ isOpen, onClose, onProjectCreated }: CreateProjectDialogProps) {
+  const t = useTranslations('project.dialog');
   const [projectName, setProjectName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,10 +39,10 @@ export function CreateProjectDialog({ isOpen, onClose, onProjectCreated }: Creat
         onClose();
       } else {
         const errorData = await response.json();
-        setError(errorData.error || "Failed to create project");
+        setError(errorData.error || t('error.failed'));
       }
     } catch {
-      setError("An unexpected error occurred.");
+      setError(t('error.unexpected'));
     } finally {
       setLoading(false);
     }
@@ -52,7 +54,7 @@ export function CreateProjectDialog({ isOpen, onClose, onProjectCreated }: Creat
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Create New Project</h2>
+          <h2 className="text-lg font-semibold">{t('title')}</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <Icons.close className="w-4 h-4" />
           </Button>
@@ -61,22 +63,22 @@ export function CreateProjectDialog({ isOpen, onClose, onProjectCreated }: Creat
           <div className="p-6 space-y-4">
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div>
-              <Label htmlFor="project-name">Project Name</Label>
+              <Label htmlFor="project-name">{t('projectName')}</Label>
               <Input
                 id="project-name"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
-                placeholder="My Awesome Project"
+                placeholder={t('placeholder')}
                 required
               />
             </div>
           </div>
           <div className="flex justify-end p-4 border-t space-x-2">
             <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Creating..." : "Create"}
+              {loading ? t('creating') : t('create')}
             </Button>
           </div>
         </form>

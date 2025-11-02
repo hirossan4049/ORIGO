@@ -3,9 +3,11 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { AppLayout } from "@/app/components/AppLayout";
 
 export default function DashboardPage() {
+  const t = useTranslations('dashboard');
   const { status } = useSession();
   const router = useRouter();
 
@@ -16,7 +18,7 @@ export default function DashboardPage() {
   }, [status, router]);
 
   if (status === "loading") {
-    return <div className="p-6">Loading...</div>;
+    return <div className="p-6">{useTranslations('common')('loading')}</div>;
   }
 
   if (status !== "authenticated") {
@@ -26,8 +28,8 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       <div className="p-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p>Welcome to the dashboard.</p>
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
+        <p>{t('welcome')}</p>
       </div>
     </AppLayout>
   );

@@ -2,9 +2,11 @@ import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
+import { getTranslations } from 'next-intl/server'
 
 export default async function Home() {
   const session = await getServerSession(authOptions)
+  const t = await getTranslations('home')
 
   if (session) {
     redirect('/dashboard')
@@ -12,49 +14,43 @@ export default async function Home() {
 
   const features = [
     {
-      title: 'Schedule anything',
-      description:
-        'Run TypeScript or JavaScript on a flexible cron schedule with timezone awareness and safe retries.',
+      title: t('features.scheduleAnything.title'),
+      description: t('features.scheduleAnything.description'),
     },
     {
-      title: 'Code-first editor',
-      description:
-        'Ship automations faster with a built-in editor, syntax highlighting, and instant execution logs.',
+      title: t('features.codeFirst.title'),
+      description: t('features.codeFirst.description'),
     },
     {
-      title: 'Environment controls',
-      description:
-        'Configure secrets, environment variables, and persistent storage for each project independently.',
+      title: t('features.environmentControls.title'),
+      description: t('features.environmentControls.description'),
     },
     {
-      title: 'Team ready',
-      description:
-        'Invite collaborators, share execution history, and keep everyone aligned with audit trails.',
+      title: t('features.teamReady.title'),
+      description: t('features.teamReady.description'),
     },
     {
-      title: 'Observable runs',
-      description:
-        'Inspect captured console output, execution status, and runtime performance for every invocation.',
+      title: t('features.observableRuns.title'),
+      description: t('features.observableRuns.description'),
     },
     {
-      title: 'API friendly',
-      description:
-        'Trigger runs via REST, webhook, or manually from the dashboard when you need ad-hoc execution.',
+      title: t('features.apiFriendly.title'),
+      description: t('features.apiFriendly.description'),
     },
   ]
 
   const steps = [
     {
-      title: 'Create a project',
-      description: 'Organize automations by domain, feature, or client with isolated settings.',
+      title: t('howItWorks.step1.title'),
+      description: t('howItWorks.step1.description'),
     },
     {
-      title: 'Write your function',
-      description: 'Use the built-in editor to author reusable tasks in TypeScript or JavaScript.',
+      title: t('howItWorks.step2.title'),
+      description: t('howItWorks.step2.description'),
     },
     {
-      title: 'Schedule & monitor',
-      description: 'Deploy on a cron cadence, trigger on demand, and analyze execution insights in real time.',
+      title: t('howItWorks.step3.title'),
+      description: t('howItWorks.step3.description'),
     },
   ]
 
@@ -75,40 +71,39 @@ export default async function Home() {
             </div>
             <div className="flex items-center gap-4 text-sm font-medium">
               <Link href="/login" className="text-slate-300 transition hover:text-white">
-                Login
+                {t('nav.login')}
               </Link>
               <Link
                 href="/register"
                 className="rounded-lg bg-white/10 px-4 py-2 text-white shadow-lg shadow-blue-500/10 transition hover:bg-white/20"
               >
-                Get Started
+                {t('nav.getStarted')}
               </Link>
             </div>
           </nav>
 
           <div className="mx-auto mt-20 max-w-3xl text-center">
             <span className="inline-flex items-center rounded-full bg-blue-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-blue-300">
-              Automate the boring parts
+              {t('hero.badge')}
             </span>
             <h1 className="mt-6 text-4xl font-bold tracking-tight text-white sm:text-6xl">
-              Schedule, run, and observe serverless workflows with confidence.
+              {t('hero.title')}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-slate-300">
-              ORIGO is the developer-first platform for orchestrating scripts on a reliable cadence. Build with the
-              tools you already love, deploy in seconds, and keep every automation observable.
+              {t('hero.description')}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
                 className="w-full rounded-lg bg-blue-500 px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-blue-500/40 transition hover:bg-blue-400 sm:w-auto"
               >
-                Create a free account
+                {t('hero.createAccount')}
               </Link>
               <Link
                 href="/login"
                 className="w-full rounded-lg border border-white/20 px-6 py-3 text-center text-sm font-semibold text-slate-200 transition hover:border-white/40 hover:text-white sm:w-auto"
               >
-                I already have an account
+                {t('hero.haveAccount')}
               </Link>
             </div>
           </div>
@@ -118,22 +113,21 @@ export default async function Home() {
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/60 shadow-2xl shadow-blue-900/30 backdrop-blur">
               <div className="grid gap-8 p-8 lg:grid-cols-2">
                 <div>
-                  <h2 className="text-xl font-semibold text-white">Write once, automate forever</h2>
+                  <h2 className="text-xl font-semibold text-white">{t('showcase.title')}</h2>
                   <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                    Author business logic with modern tooling, save iterations persistently, and run specific functions
-                    on demand. Every execution retains output, status, and timing so you can debug in minutes.
+                    {t('showcase.description')}
                   </p>
                   <dl className="mt-8 grid grid-cols-1 gap-6 text-sm text-slate-300 sm:grid-cols-2">
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4">
-                      <dt className="font-semibold text-white">Cron intelligence</dt>
+                      <dt className="font-semibold text-white">{t('showcase.cronIntelligence')}</dt>
                       <dd className="mt-2">
-                        Preview schedules, catch mistakes early, and adapt to daylight saving automatically.
+                        {t('showcase.cronDescription')}
                       </dd>
                     </div>
                     <div className="rounded-xl border border-white/5 bg-white/5 p-4">
-                      <dt className="font-semibold text-white">In-line logs</dt>
+                      <dt className="font-semibold text-white">{t('showcase.inlineLogs')}</dt>
                       <dd className="mt-2">
-                        Debug faster with streamed console output, captured errors, and custom metrics.
+                        {t('showcase.inlineLogsDescription')}
                       </dd>
                     </div>
                   </dl>
@@ -172,10 +166,9 @@ export const dailyReport = schedule("0 8 * * 1-5", async ({ log, env }) => {
       <main className="bg-slate-950">
         <section className="mx-auto max-w-6xl px-6 py-24 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-semibold text-white sm:text-4xl">Made for modern automation teams</h2>
+            <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('features.title')}</h2>
             <p className="mt-4 text-base text-slate-300">
-              An opinionated toolkit that unlocks shipping velocity, operational confidence, and end-to-end visibility
-              for every background task your product depends on.
+              {t('features.description')}
             </p>
           </div>
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -198,10 +191,9 @@ export const dailyReport = schedule("0 8 * * 1-5", async ({ log, env }) => {
           <div className="mx-auto max-w-6xl px-6 py-24 lg:px-8">
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div>
-                <h2 className="text-3xl font-semibold text-white sm:text-4xl">How ORIGO keeps you shipping</h2>
+                <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('howItWorks.title')}</h2>
                 <p className="mt-4 text-base text-slate-300">
-                  Everything you need to transform scripts into production-ready jobs without the boilerplate or ops
-                  overhead.
+                  {t('howItWorks.description')}
                 </p>
                 <div className="mt-10 space-y-6">
                   {steps.map((step, index) => (
@@ -218,30 +210,30 @@ export const dailyReport = schedule("0 8 * * 1-5", async ({ log, env }) => {
                 </div>
               </div>
               <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-2xl shadow-blue-900/40">
-                <h3 className="text-lg font-semibold text-white">Why teams switch to ORIGO</h3>
+                <h3 className="text-lg font-semibold text-white">{t('howItWorks.whySwitch')}</h3>
                 <ul className="mt-6 space-y-4 text-sm text-slate-300">
                   <li className="flex items-start gap-3">
                     <span className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-xs font-semibold text-blue-300">
                       •
                     </span>
-                    <p>Deploy new automations in minutes instead of wrestling with infrastructure.</p>
+                    <p>{t('howItWorks.reason1')}</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-xs font-semibold text-blue-300">
                       •
                     </span>
-                    <p>Standardize job execution across engineering, ops, and data teams.</p>
+                    <p>{t('howItWorks.reason2')}</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/10 text-xs font-semibold text-blue-300">
                       •
                     </span>
-                    <p>Gain end-to-end observability with alerts, logs, and run history in one place.</p>
+                    <p>{t('howItWorks.reason3')}</p>
                   </li>
                 </ul>
                 <div className="mt-8 rounded-2xl border border-blue-500/30 bg-blue-500/5 p-6 text-sm text-blue-200">
                   “We replaced a patchwork of scripts and cronboxes with ORIGO and cut incident response time by 60%.”
-                  <div className="mt-4 font-semibold text-white">— Leah Carter, Platform Lead</div>
+                  <div className="mt-4 font-semibold text-white">{t('howItWorks.testimonialAuthor')}</div>
                 </div>
               </div>
             </div>
@@ -250,22 +242,22 @@ export const dailyReport = schedule("0 8 * * 1-5", async ({ log, env }) => {
 
         <section className="mx-auto max-w-6xl px-6 py-24 lg:px-8">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-blue-600/10 via-slate-900 to-slate-950 p-12 text-center shadow-2xl shadow-blue-900/30">
-            <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to orchestrate smarter workflows?</h2>
+            <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('cta.title')}?</h2>
             <p className="mt-4 text-base text-slate-300">
-              Start free, connect your projects, and deliver reliable automations without the infrastructure overhead.
+              {t('cta.description')}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
                 className="w-full rounded-lg bg-blue-500 px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-blue-500/40 transition hover:bg-blue-400 sm:w-auto"
               >
-                Sign up in minutes
+                {t('cta.signUp')}
               </Link>
               <Link
                 href="/login"
                 className="w-full rounded-lg border border-white/20 px-6 py-3 text-center text-sm font-semibold text-slate-200 transition hover:border-white/40 hover:text-white sm:w-auto"
               >
-                Login to your workspace
+                {t('cta.loginWorkspace')}
               </Link>
             </div>
           </div>
@@ -281,14 +273,14 @@ export const dailyReport = schedule("0 8 * * 1-5", async ({ log, env }) => {
             ORIGO
           </div>
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} ORIGO. Schedule your scripts, observe execution, and automate with confidence.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <div className="flex items-center gap-4">
             <Link href="/login" className="transition hover:text-white">
-              Login
+              {t('footer.login')}
             </Link>
             <Link href="/register" className="transition hover:text-white">
-              Register
+              {t('footer.register')}
             </Link>
           </div>
         </div>
