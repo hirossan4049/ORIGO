@@ -21,7 +21,7 @@ export function AppLayout({ children, onRunClick, projectId, projectName }: AppL
       <AppHeader onSettingsClick={() => setSettingsOpen(true)} onRunClick={onRunClick} projectName={projectName} />
       <ProjectListNav />
       {projectId && <FileListNav projectId={projectId} />}
-      <main className={`pt-14 ${projectId ? 'pl-[18rem]' : 'pl-64'}`}>
+      <main className={`pt-14 ${projectId ? 'pl-[32rem]' : 'pl-64'}`}>
         {children}
       </main>
       <SettingsPanel isOpen={isSettingsOpen} onClose={() => setSettingsOpen(false)} projectId={projectId} />
