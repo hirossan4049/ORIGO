@@ -4,6 +4,45 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { startSchedule } from '@/lib/scheduler'
 
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const schedules = await prisma.schedule.findMany({
+      where: {
+        script: {
+          project: {
+            userId: session.user.id
+          }
+        }
+      },
+      include: {
+        script: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    return NextResponse.json({ schedules })
+  } catch (error) {
+    console.error('Get schedules error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
