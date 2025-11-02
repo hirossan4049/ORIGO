@@ -49,10 +49,26 @@ export function startSchedule(schedule: any) {
       console.error(`Failed to parse localStorage for schedule ${schedule.id}:`, error)
     }
 
-    await executeScript(schedule.fileId, schedule.functionName, {
-      env: envVars,
-      localStorage
+    // Get file content and runtime
+    const file = await prisma.file.findUnique({
+      where: { id: schedule.fileId }
     })
+    
+    if (!file) {
+      console.error(`File not found for schedule ${schedule.id}`)
+      return
+    }
+
+    await executeScript(
+      schedule.fileId, 
+      schedule.functionName, 
+      file.content,
+      {
+        env: envVars,
+        localStorage
+      },
+      (schedule.runtime || file.runtime || 'nodejs') as 'nodejs' | 'deno'
+    )
   })
 
   scheduledTasks.set(schedule.id, task)

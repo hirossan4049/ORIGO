@@ -150,6 +150,38 @@ function performBackup() {
 
 Schedule: `0 1 * * *` (Daily at 1 AM)
 
+### Using Deno Runtime
+
+ORIGO supports Deno runtime for enhanced security and modern JavaScript features.
+
+```javascript
+// Example: Fetch data with Deno
+async function fetchData() {
+  console.log('Fetching data with Deno runtime');
+  const apiUrl = env.API_URL || 'https://api.example.com/data';
+  
+  console.log(`Requesting: ${apiUrl}`);
+  // In a real scenario with proper permissions
+  // const response = await fetch(apiUrl);
+  // const data = await response.json();
+  
+  console.log('Data fetch completed');
+  localStorage.lastFetch = new Date().toISOString();
+  
+  return { success: true };
+}
+```
+
+To use Deno runtime:
+1. Select "Deno" from the runtime dropdown in the Execution Panel
+2. Execute your function
+
+**Benefits of Deno:**
+- Secure by default (explicit permissions required)
+- Built-in TypeScript support
+- Modern ES modules
+- Better performance for async operations
+
 ## Docker Deployment
 
 ### Using Docker Compose

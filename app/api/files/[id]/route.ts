@@ -52,7 +52,13 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { name, content, language } = await req.json()
+    const { name, content, language, runtime } = await req.json()
+
+    const updateData: any = {}
+    if (name !== undefined) updateData.name = name
+    if (content !== undefined) updateData.content = content
+    if (language !== undefined) updateData.language = language
+    if (runtime !== undefined) updateData.runtime = runtime
 
     const file = await prisma.file.updateMany({
       where: {
@@ -61,11 +67,7 @@ export async function PUT(
           userId: session.user.id
         }
       },
-      data: {
-        name,
-        content,
-        language
-      }
+      data: updateData
     })
 
     if (file.count === 0) {

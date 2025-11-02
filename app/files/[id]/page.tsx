@@ -11,6 +11,7 @@ interface FileData {
   name: string;
   content: string;
   language: string;
+  runtime: string;
   projectId: string;
   project: { name: string };
 }
@@ -115,7 +116,7 @@ export default function FilePage({ params }: { params: { id: string } }) {
             <CodeEditor fileId={params.id} initialContent={content} language={file.language} onContentChange={setContent} />
           )}
           {activeTab === "execution" && (
-            <ExecutionPanel fileId={params.id} functionNames={functionNames} ref={executionPanelRef} />
+            <ExecutionPanel fileId={params.id} functionNames={functionNames} fileRuntime={file.runtime} ref={executionPanelRef} />
           )}
         </div>
       </div>

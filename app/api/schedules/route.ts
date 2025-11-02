@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { fileId, cronExpression, functionName, envVars, localStorage } = await req.json()
+    const { fileId, cronExpression, functionName, envVars, localStorage, runtime } = await req.json()
 
     if (!fileId || !cronExpression || !functionName) {
       return NextResponse.json(
@@ -79,6 +79,7 @@ export async function POST(req: NextRequest) {
         fileId,
         cronExpression,
         functionName,
+        runtime: runtime || file.runtime || 'nodejs',
         envVars: envVars ? JSON.stringify(envVars) : null,
         localStorage: localStorage ? JSON.stringify(localStorage) : null,
         enabled: true

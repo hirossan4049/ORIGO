@@ -7,6 +7,7 @@ import { Icons } from "@/app/components/ui/icons";
 interface ExecutionPanelProps {
   fileId: string;
   functionNames: string[];
+  fileRuntime?: string;
 }
 
 interface ExecutionLog {
@@ -16,10 +17,12 @@ interface ExecutionLog {
   result?: any;
   error?: any;
   consoleLogs?: string[];
+  runtime?: string;
 }
 
-export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPanelProps, ref) => {
+export const ExecutionPanel = forwardRef(({ fileId, functionNames, fileRuntime }: ExecutionPanelProps, ref) => {
   const [selectedFunction, setSelectedFunction] = useState("main");
+  const [selectedRuntime, setSelectedRuntime] = useState<string>(fileRuntime || "nodejs");
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
   const [running, setRunning] = useState(false);
 
@@ -29,6 +32,12 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
     }
   }, [functionNames, selectedFunction]);
 
+  useEffect(() => {
+    if (fileRuntime) {
+      setSelectedRuntime(fileRuntime);
+    }
+  }, [fileRuntime]);
+
   const handleRun = async (funcName: string = selectedFunction) => {
     setRunning(true);
     const startTime = new Date();
@@ -36,7 +45,10 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
       const response = await fetch(`/api/files/${fileId}/execute`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ functionName: funcName }),
+        body: JSON.stringify({ 
+          functionName: funcName,
+          runtime: selectedRuntime 
+        }),
       });
       const result = await response.json();
       setLogs(prevLogs => [
@@ -47,6 +59,7 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
           result: result.result,
           error: result.error,
           consoleLogs: result.logs,
+          runtime: selectedRuntime,
         },
         ...prevLogs,
       ]);
@@ -59,6 +72,7 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
           success: false,
           error: "An unexpected error occurred.",
           consoleLogs: [],
+          runtime: selectedRuntime,
         },
         ...prevLogs,
       ]);
@@ -88,6 +102,15 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
               </option>
             ))}
           </select>
+          <select
+            value={selectedRuntime}
+            onChange={(e) => setSelectedRuntime(e.target.value)}
+            className="text-sm p-1 border border-gray-300 rounded-md"
+            title="Select runtime"
+          >
+            <option value="nodejs">Node.js</option>
+            <option value="deno">Deno</option>
+          </select>
           <Button onClick={() => handleRun()} size="sm" disabled={running}>
             <Icons.play className="w-4 h-4 mr-2" />
             {running ? "Running..." : "Run"}
@@ -105,6 +128,11 @@ export const ExecutionPanel = forwardRef(({ fileId, functionNames }: ExecutionPa
               )}
               <span className="font-semibold">{log.functionName}</span>
               <span className="text-gray-500 text-xs">{log.timestamp}</span>
+              {log.runtime && (
+                <span className="px-2 py-0.5 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                  {log.runtime}
+                </span>
+              )}
             </div>
             {typeof log.result !== "undefined" && (
               <div className="mt-2">

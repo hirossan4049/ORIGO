@@ -23,6 +23,16 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Install Deno runtime (pinned version for reproducible builds)
+ENV DENO_VERSION=2.5.6
+RUN apt-get update && apt-get install -y curl unzip && \
+    curl -fsSL https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip -o /tmp/deno.zip && \
+    unzip /tmp/deno.zip -d /tmp && \
+    mv /tmp/deno /usr/local/bin/ && \
+    chmod +x /usr/local/bin/deno && \
+    rm /tmp/deno.zip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
