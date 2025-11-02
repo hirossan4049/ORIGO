@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
+import { startSchedule, stopSchedule } from '@/lib/scheduler'
 
 export async function PUT(
   req: NextRequest,
@@ -16,7 +17,7 @@ export async function PUT(
 
     const { cronExpression, functionName, envVars, localStorage, enabled } = await req.json()
 
-    const schedule = await prisma.schedule.updateMany({
+    const updated = await prisma.schedule.updateMany({
       where: {
         id: params.id,
         script: {
@@ -34,8 +35,21 @@ export async function PUT(
       }
     })
 
-    if (schedule.count === 0) {
+    if (updated.count === 0) {
       return NextResponse.json({ error: 'Schedule not found' }, { status: 404 })
+    }
+
+    // Restart the schedule with new settings
+    const schedule = await prisma.schedule.findUnique({
+      where: { id: params.id }
+    })
+
+    if (schedule) {
+      if (schedule.enabled) {
+        startSchedule(schedule)
+      } else {
+        stopSchedule(schedule.id)
+      }
     }
 
     return NextResponse.json({ success: true })
@@ -58,6 +72,9 @@ export async function DELETE(
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    // Stop the schedule first
+    stopSchedule(params.id)
 
     const schedule = await prisma.schedule.deleteMany({
       where: {

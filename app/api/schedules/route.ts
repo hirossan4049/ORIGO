@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
+import { startSchedule } from '@/lib/scheduler'
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,6 +45,9 @@ export async function POST(req: NextRequest) {
         enabled: true
       }
     })
+
+    // Start the schedule immediately
+    startSchedule(schedule)
 
     return NextResponse.json({ schedule })
   } catch (error) {
