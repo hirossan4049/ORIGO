@@ -17,9 +17,11 @@ export function LanguageSwitcher() {
   const handleLocaleChange = (newLocale: Locale) => {
     // Get the path without locale prefix
     const segments = pathname.split('/').filter(Boolean)
-    const pathWithoutLocale = segments[0] && locales.includes(segments[0] as Locale)
-      ? '/' + segments.slice(1).join('/')
-      : pathname
+    const hasLocalePrefix = segments[0] && locales.includes(segments[0] as Locale)
+    const pathSegmentsWithoutLocale = hasLocalePrefix ? segments.slice(1) : segments
+    const pathWithoutLocale = pathSegmentsWithoutLocale.length > 0 
+      ? '/' + pathSegmentsWithoutLocale.join('/') 
+      : ''
     
     // Navigate to the new locale path
     // If it's the default locale, don't include it in the path
