@@ -17,6 +17,7 @@ ORIGO is a powerful, self-hosted platform that enables you to write, schedule, a
 - ⏰ **Scheduled Execution**: Configure automatic execution with cron expressions
 - 🔧 **Environment Configuration**: Set environment variables and localStorage for each schedule
 - 📊 **Execution History**: View logs and execution results
+- 🌐 **Internationalization**: Multi-language support (English and Japanese)
 - 🐳 **Docker Support**: Easy deployment with Docker and docker-compose
 
 ## 📋 Table of Contents
@@ -30,6 +31,7 @@ ORIGO is a powerful, self-hosted platform that enables you to write, schedule, a
 - [Usage](#-usage)
 - [API Routes](#-api-routes)
 - [Development](#-development)
+- [Internationalization](#-internationalization)
 - [Security Notes](#-security-notes)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -282,6 +284,30 @@ ORIGO/
 ├── tests/              # End-to-end tests
 └── types/              # TypeScript type definitions
 ```
+
+## 🌐 Internationalization
+
+ORIGO supports multiple languages out of the box:
+
+- 🇬🇧 **English** (default)
+- 🇯🇵 **Japanese** (日本語)
+
+### Using the Language Switcher
+
+Users can easily switch between languages using the language switcher available on:
+- Home page (navigation bar)
+- Login page
+- Register page
+
+The selected language preference is maintained as you navigate through the application.
+
+### For Developers
+
+Want to add more languages or customize translations? Check out our comprehensive [Localization Guide](./docs/L10N.md) for:
+- Adding new languages
+- Updating translations
+- Translation best practices
+- Troubleshooting
 
 ## 🔒 Security Notes
 

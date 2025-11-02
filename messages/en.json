@@ -1,0 +1,143 @@
+{
+  "common": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "home": {
+    "nav": {
+      "login": "Login",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "Automate the boring parts",
+      "title": "Schedule, run, and observe serverless workflows with confidence.",
+      "description": "ORIGO is the developer-first platform for orchestrating scripts on a reliable cadence. Build with the tools you already love, deploy in seconds, and keep every automation observable.",
+      "createAccount": "Create a free account",
+      "haveAccount": "I already have an account"
+    },
+    "showcase": {
+      "title": "Write once, automate forever",
+      "description": "Author business logic with modern tooling, save iterations persistently, and run specific functions on demand. Every execution retains output, status, and timing so you can debug in minutes.",
+      "cronIntelligence": "Cron intelligence",
+      "cronDescription": "Preview schedules, catch mistakes early, and adapt to daylight saving automatically.",
+      "inlineLogs": "In-line logs",
+      "inlineLogsDescription": "Debug faster with streamed console output, captured errors, and custom metrics."
+    },
+    "features": {
+      "title": "Made for modern automation teams",
+      "description": "An opinionated toolkit that unlocks shipping velocity, operational confidence, and end-to-end visibility for every background task your product depends on.",
+      "scheduleAnything": {
+        "title": "Schedule anything",
+        "description": "Run TypeScript or JavaScript on a flexible cron schedule with timezone awareness and safe retries."
+      },
+      "codeFirst": {
+        "title": "Code-first editor",
+        "description": "Ship automations faster with a built-in editor, syntax highlighting, and instant execution logs."
+      },
+      "environmentControls": {
+        "title": "Environment controls",
+        "description": "Configure secrets, environment variables, and persistent storage for each project independently."
+      },
+      "teamReady": {
+        "title": "Team ready",
+        "description": "Invite collaborators, share execution history, and keep everyone aligned with audit trails."
+      },
+      "observableRuns": {
+        "title": "Observable runs",
+        "description": "Inspect captured console output, execution status, and runtime performance for every invocation."
+      },
+      "apiFriendly": {
+        "title": "API friendly",
+        "description": "Trigger runs via REST, webhook, or manually from the dashboard when you need ad-hoc execution."
+      }
+    },
+    "howItWorks": {
+      "title": "How ORIGO keeps you shipping",
+      "description": "Everything you need to transform scripts into production-ready jobs without the boilerplate or ops overhead.",
+      "step1": {
+        "title": "Create a project",
+        "description": "Organize automations by domain, feature, or client with isolated settings."
+      },
+      "step2": {
+        "title": "Write your function",
+        "description": "Use the built-in editor to author reusable tasks in TypeScript or JavaScript."
+      },
+      "step3": {
+        "title": "Schedule & monitor",
+        "description": "Deploy on a cron cadence, trigger on demand, and analyze execution insights in real time."
+      },
+      "whySwitch": "Why teams switch to ORIGO",
+      "reason1": "Deploy new automations in minutes instead of wrestling with infrastructure.",
+      "reason2": "Standardize job execution across engineering, ops, and data teams.",
+      "reason3": "Gain end-to-end observability with alerts, logs, and run history in one place.",
+      "testimonial": "We replaced a patchwork of scripts and cronboxes with ORIGO and cut incident response time by 60%.",
+      "testimonialAuthor": "— Leah Carter, Platform Lead"
+    },
+    "cta": {
+      "title": "Ready to orchestrate smarter workflows?",
+      "description": "Start free, connect your projects, and deliver reliable automations without the infrastructure overhead.",
+      "signUp": "Sign up in minutes",
+      "loginWorkspace": "Login to your workspace"
+    },
+    "footer": {
+      "copyright": "© {year} ORIGO. Schedule your scripts, observe execution, and automate with confidence.",
+      "login": "Login",
+      "register": "Register"
+    }
+  },
+  "login": {
+    "title": "Login to ORIGO",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "submitting": "Logging in...",
+    "error": {
+      "invalidCredentials": "Invalid email or password",
+      "generic": "An error occurred"
+    },
+    "noAccount": "Don't have an account?",
+    "registerLink": "Register"
+  },
+  "register": {
+    "title": "Register for ORIGO",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Register",
+    "submitting": "Registering...",
+    "error": {
+      "registrationFailed": "Registration failed",
+      "generic": "An error occurred"
+    },
+    "haveAccount": "Already have an account?",
+    "loginLink": "Login"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to the dashboard."
+  },
+  "project": {
+    "createNew": "Create New Project",
+    "dialog": {
+      "title": "Create New Project",
+      "projectName": "Project Name",
+      "placeholder": "My Awesome Project",
+      "cancel": "Cancel",
+      "create": "Create",
+      "creating": "Creating...",
+      "error": {
+        "failed": "Failed to create project",
+        "unexpected": "An unexpected error occurred."
+      }
+    }
+  }
+}
