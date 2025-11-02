@@ -28,6 +28,8 @@ export default function DashboardPage() {
     } else if (status === 'authenticated') {
       fetchProjects()
     }
+    // fetchProjects is stable and doesn't need to be in deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, router])
 
   const fetchProjects = async () => {

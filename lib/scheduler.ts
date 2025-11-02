@@ -34,8 +34,20 @@ export function startSchedule(schedule: any) {
   const task = cron.schedule(schedule.cronExpression, async () => {
     console.log(`Executing scheduled task ${schedule.id}`)
     
-    const envVars = schedule.envVars ? JSON.parse(schedule.envVars) : {}
-    const localStorage = schedule.localStorage ? JSON.parse(schedule.localStorage) : {}
+    let envVars = {}
+    let localStorage = {}
+    
+    try {
+      envVars = schedule.envVars ? JSON.parse(schedule.envVars) : {}
+    } catch (error) {
+      console.error(`Failed to parse envVars for schedule ${schedule.id}:`, error)
+    }
+    
+    try {
+      localStorage = schedule.localStorage ? JSON.parse(schedule.localStorage) : {}
+    } catch (error) {
+      console.error(`Failed to parse localStorage for schedule ${schedule.id}:`, error)
+    }
 
     await executeScript(schedule.scriptId, schedule.functionName, {
       env: envVars,

@@ -35,6 +35,8 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
     } else if (status === 'authenticated') {
       fetchProject()
     }
+    // fetchProject and params are stable in Next.js App Router
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, router])
 
   const fetchProject = async () => {
