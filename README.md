@@ -221,13 +221,13 @@ Configure environment variables and localStorage for each schedule to customize 
 - `PUT /api/projects/[id]` - Update project
 - `DELETE /api/projects/[id]` - Delete project
 
-### Scripts
-- `POST /api/scripts` - Create new script
-- `GET /api/scripts/[id]` - Get script details
-- `PUT /api/scripts/[id]` - Update script content
-- `DELETE /api/scripts/[id]` - Delete script
-- `POST /api/scripts/[id]/execute` - Execute script manually
-- `GET /api/scripts/[id]/executions` - Get execution history
+### Files (Scripts)
+- `POST /api/files` - Create new script file
+- `GET /api/files/[id]` - Get script file details
+- `PUT /api/files/[id]` - Update script file content
+- `DELETE /api/files/[id]` - Delete script file
+- `POST /api/files/[id]/execute` - Execute script manually
+- `GET /api/files/[id]/executions` - Get execution history
 
 ### Schedules
 - `POST /api/schedules` - Create schedule
@@ -350,7 +350,7 @@ If you encounter any issues or have questions:
 
 - 📫 Open an [issue](https://github.com/hirossan4049/ORIGO/issues)
 - 💬 Start a [discussion](https://github.com/hirossan4049/ORIGO/discussions)
-- 📖 Check the [documentation](EXAMPLE.md) for usage examples
+- 📖 Check [EXAMPLE.md](EXAMPLE.md) for detailed usage examples
 
 ---
 
