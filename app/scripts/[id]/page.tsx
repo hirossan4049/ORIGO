@@ -286,43 +286,32 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="container">
-      <div className="header">
-        <h1>{script.name}</h1>
-        <p>{script.language}</p>
-        <div className="nav">
-          <Link href={`/projects/${script.projectId}`}>Back to {script.project.name}</Link>
-          <Link href="/dashboard">Dashboard</Link>
+    <div className="container mx-auto py-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">{script.name}</h1>
+          <p className="text-gray-600">{script.language}</p>
+        </div>
+        <div className="flex space-x-4">
+          <Link href={`/projects/${script.projectId}`} className="text-blue-600 hover:underline">
+            Back to {script.project.name}
+          </Link>
+          <Link href="/dashboard" className="text-blue-600 hover:underline">
+            Dashboard
+          </Link>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '2px solid #e0e0e0' }}>
+      <div className="flex border-b border-gray-200 mb-6">
         <button
           onClick={() => setActiveTab('editor')}
-          style={{
-            padding: '10px 20px',
-            background: activeTab === 'editor' ? '#0070f3' : 'transparent',
-            color: activeTab === 'editor' ? '#fff' : '#333',
-            border: 'none',
-            borderBottom: activeTab === 'editor' ? '2px solid #0070f3' : 'none',
-            cursor: 'pointer',
-            fontWeight: activeTab === 'editor' ? 'bold' : 'normal'
-          }}
+          className={`py-2 px-4 text-sm font-medium ${activeTab === 'editor' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
         >
           Code Editor
         </button>
         <button
           onClick={() => setActiveTab('logs')}
-          style={{
-            padding: '10px 20px',
-            background: activeTab === 'logs' ? '#0070f3' : 'transparent',
-            color: activeTab === 'logs' ? '#fff' : '#333',
-            border: 'none',
-            borderBottom: activeTab === 'logs' ? '2px solid #0070f3' : 'none',
-            cursor: 'pointer',
-            fontWeight: activeTab === 'logs' ? 'bold' : 'normal'
-          }}
+          className={`py-2 px-4 text-sm font-medium ${activeTab === 'logs' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
         >
           Execution Logs ({executions.length})
         </button>
@@ -330,9 +319,9 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
 
       {activeTab === 'editor' && (
         <>
-          <div className="card">
-            <h2>Code Editor</h2>
-            <div style={{ border: '1px solid #e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Code Editor</h2>
+            <div className="border border-gray-300 rounded-md overflow-hidden">
               <MonacoEditor
                 height="500px"
                 language={script.language === 'typescript' ? 'typescript' : 'javascript'}
@@ -348,119 +337,119 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
                 }}
               />
             </div>
-            <div style={{ marginTop: '10px' }}>
-              <button className="button" onClick={saveScript} disabled={saving}>
+            <div className="mt-4">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={saveScript} disabled={saving}>
                 {saving ? 'Saving...' : 'Save Code'}
               </button>
             </div>
           </div>
 
-          <div className="card">
-            <h2>Execute Script</h2>
-            <div className="form-group">
-              <label htmlFor="functionName">Function Name</label>
+          <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Execute Script</h2>
+            <div className="mb-4">
+              <label htmlFor="functionName" className="block text-sm font-medium text-gray-700 mb-1">Function Name</label>
               <input
                 id="functionName"
                 type="text"
                 value={functionName}
                 onChange={(e) => setFunctionName(e.target.value)}
                 placeholder="main"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>
 
-            <div className="form-group">
-              <label>Environment Variables</label>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Environment Variables</label>
               {envVars.map((item, index) => (
-                <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                <div key={index} className="flex space-x-2 mb-2">
                   <input
                     type="text"
                     placeholder="Key"
                     value={item.key}
                     onChange={(e) => updateEnvVar(index, 'key', e.target.value)}
-                    style={{ flex: 1 }}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   <input
                     type="text"
                     placeholder="Value"
                     value={item.value}
                     onChange={(e) => updateEnvVar(index, 'value', e.target.value)}
-                    style={{ flex: 1 }}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   <button
-                    className="button button-danger"
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-md transition-colors duration-200"
                     onClick={() => removeEnvVar(index)}
-                    style={{ padding: '10px 15px' }}
                   >
                     ✕
                   </button>
                 </div>
               ))}
-              <button className="button button-secondary" onClick={addEnvVar}>
+              <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={addEnvVar}>
                 + Add Environment Variable
               </button>
             </div>
 
-            <div className="form-group">
-              <label>Local Storage</label>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Local Storage</label>
               {localStorageItems.map((item, index) => (
-                <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                <div key={index} className="flex space-x-2 mb-2">
                   <input
                     type="text"
                     placeholder="Key"
                     value={item.key}
                     onChange={(e) => updateLocalStorageItem(index, 'key', e.target.value)}
-                    style={{ flex: 1 }}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   <input
                     type="text"
                     placeholder="Value"
                     value={item.value}
                     onChange={(e) => updateLocalStorageItem(index, 'value', e.target.value)}
-                    style={{ flex: 1 }}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   <button
-                    className="button button-danger"
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-md transition-colors duration-200"
                     onClick={() => removeLocalStorageItem(index)}
-                    style={{ padding: '10px 15px' }}
                   >
                     ✕
                   </button>
                 </div>
               ))}
-              <button className="button button-secondary" onClick={addLocalStorageItem}>
+              <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={addLocalStorageItem}>
                 + Add Local Storage Item
               </button>
             </div>
 
-            <button className="button" onClick={executeScript}>
+            <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={executeScript}>
               Execute Now
             </button>
             {executeResult && (
-              <div style={{ marginTop: '10px' }}>
-                <h3>Result:</h3>
-                <pre style={{ background: '#f5f5f5', padding: '10px', borderRadius: '4px', maxHeight: '300px', overflow: 'auto' }}>
+              <div className="mt-4">
+                <h3 className="text-lg font-medium text-gray-800">Result:</h3>
+                <pre className="bg-gray-100 p-3 rounded-md max-h-80 overflow-auto text-sm text-gray-800">
                   {JSON.stringify(executeResult, null, 2)}
                 </pre>
               </div>
             )}
           </div>
 
-          <div className="card">
-            <h2>Schedules</h2>
-            <button className="button" onClick={() => setShowScheduleModal(true)}>
+          <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Schedules</h2>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200" onClick={() => setShowScheduleModal(true)}>
               Create Schedule
             </button>
 
             {showScheduleModal && (
-              <form onSubmit={createSchedule} style={{ marginTop: '20px', border: '1px solid #e0e0e0', padding: '20px', borderRadius: '8px' }}>
-                <h3>Create New Schedule</h3>
-                
-                <div className="form-group">
-                  <label htmlFor="scheduleType">Schedule Type</label>
+              <form onSubmit={createSchedule} className="mt-6 p-6 border border-gray-200 rounded-lg bg-gray-50">
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">Create New Schedule</h3>
+
+                <div className="mb-4">
+                  <label htmlFor="scheduleType" className="block text-sm font-medium text-gray-700 mb-1">Schedule Type</label>
                   <select
                     id="scheduleType"
                     value={scheduleType}
                     onChange={(e) => setScheduleType(e.target.value as any)}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   >
                     <option value="minutes">Every X Minutes</option>
                     <option value="hours">Every X Hours</option>
@@ -469,8 +458,8 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="scheduleValue">
+                <div className="mb-4">
+                  <label htmlFor="scheduleValue" className="block text-sm font-medium text-gray-700 mb-1">
                     {scheduleType === 'custom' ? 'Cron Expression' : 'Interval'}
                   </label>
                   <input
@@ -479,33 +468,35 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
                     value={scheduleValue}
                     onChange={(e) => setScheduleValue(e.target.value)}
                     placeholder={scheduleType === 'custom' ? '*/5 * * * *' : '5'}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   {scheduleType !== 'custom' && (
-                    <small>
+                    <small className="mt-1 text-gray-500 block">
                       Will run every {scheduleValue} {scheduleType}
-                      {' '} (Cron: {getCronExpression()})
+                      {' '}(Cron: {getCronExpression()})
                     </small>
                   )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="schedFunctionName">Function Name</label>
+                <div className="mb-4">
+                  <label htmlFor="schedFunctionName" className="block text-sm font-medium text-gray-700 mb-1">Function Name</label>
                   <input
                     id="schedFunctionName"
                     type="text"
                     value={functionName}
                     onChange={(e) => setFunctionName(e.target.value)}
                     required
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
 
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button type="submit" className="button">
+                <div className="flex space-x-3">
+                  <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">
                     Create Schedule
                   </button>
                   <button
                     type="button"
-                    className="button button-secondary"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-md transition-colors duration-200"
                     onClick={() => setShowScheduleModal(false)}
                   >
                     Cancel
@@ -514,36 +505,29 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
               </form>
             )}
 
-            <div style={{ marginTop: '20px' }}>
+            <div className="mt-6">
               {script.schedules.length === 0 ? (
-                <p>No schedules configured</p>
+                <p className="text-gray-600">No schedules configured</p>
               ) : (
                 script.schedules.map((schedule) => (
                   <div
                     key={schedule.id}
-                    style={{
-                      border: '1px solid #e0e0e0',
-                      padding: '15px',
-                      marginBottom: '10px',
-                      borderRadius: '4px',
-                      background: schedule.enabled ? '#fff' : '#f5f5f5'
-                    }}
+                    className={`border border-gray-200 rounded-lg p-4 mb-4 ${schedule.enabled ? 'bg-white' : 'bg-gray-50'}`}
                   >
-                    <div>
+                    <div className="text-sm text-gray-700">
                       <strong>Cron:</strong> {schedule.cronExpression}
                     </div>
-                    <div>
+                    <div className="text-sm text-gray-700 mt-1">
                       <strong>Function:</strong> {schedule.functionName}
                     </div>
-                    <div>
+                    <div className="text-sm text-gray-700 mt-1">
                       <strong>Status:</strong>{' '}
-                      <span style={{ color: schedule.enabled ? 'green' : 'red' }}>
+                      <span className={`font-semibold ${schedule.enabled ? 'text-green-600' : 'text-red-600'}`}>
                         {schedule.enabled ? 'Enabled' : 'Disabled'}
                       </span>
                     </div>
                     <button
-                      className="button button-danger"
-                      style={{ marginTop: '10px' }}
+                      className="mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-md transition-colors duration-200"
                       onClick={() => deleteSchedule(schedule.id)}
                     >
                       Delete Schedule
@@ -557,34 +541,25 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
       )}
 
       {activeTab === 'logs' && (
-        <div className="card">
-          <h2>Execution Logs</h2>
+        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Execution Logs</h2>
           {executions.length === 0 ? (
-            <p>No executions yet. Run the script to see logs here.</p>
+            <p className="text-gray-600">No executions yet. Run the script to see logs here.</p>
           ) : (
-            <div style={{ maxHeight: '600px', overflow: 'auto' }}>
+            <div className="max-h-96 overflow-y-auto pr-2">
               {executions.map((execution) => (
                 <div
                   key={execution.id}
-                  style={{
-                    border: '1px solid #e0e0e0',
-                    padding: '15px',
-                    marginBottom: '15px',
-                    borderRadius: '4px',
-                    background: execution.status === 'success' ? '#f0f9ff' : execution.status === 'error' ? '#fff0f0' : '#fffbf0'
-                  }}
+                  className={`border border-gray-200 rounded-lg p-4 mb-4 ${execution.status === 'success' ? 'bg-blue-50' : execution.status === 'error' ? 'bg-red-50' : 'bg-yellow-50'}`}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <div className="flex justify-between items-center mb-2">
                     <div>
-                      <strong>Status:</strong>{' '}
-                      <span style={{
-                        color: execution.status === 'success' ? 'green' : execution.status === 'error' ? 'red' : 'orange',
-                        fontWeight: 'bold'
-                      }}>
+                      <strong className="text-gray-800">Status:</strong>{' '}
+                      <span className={`font-bold ${execution.status === 'success' ? 'text-green-600' : execution.status === 'error' ? 'text-red-600' : 'text-yellow-600'}`}>
                         {execution.status.toUpperCase()}
                       </span>
                     </div>
-                    <div style={{ fontSize: '12px', color: '#666' }}>
+                    <div className="text-xs text-gray-500">
                       {new Date(execution.startedAt).toLocaleString()}
                       {execution.endedAt && (
                         <> • Duration: {Math.round((new Date(execution.endedAt).getTime() - new Date(execution.startedAt).getTime()) / 1000)}s</>
@@ -593,34 +568,18 @@ export default function ScriptPage({ params }: { params: { id: string } }) {
                   </div>
                   
                   {execution.output && (
-                    <div>
-                      <strong>Output:</strong>
-                      <pre style={{
-                        background: '#f5f5f5',
-                        padding: '10px',
-                        borderRadius: '4px',
-                        marginTop: '5px',
-                        fontSize: '12px',
-                        overflow: 'auto',
-                        maxHeight: '200px'
-                      }}>
+                    <div className="mt-2">
+                      <strong className="text-gray-800">Output:</strong>
+                      <pre className="bg-gray-100 p-3 rounded-md mt-1 text-sm text-gray-800 max-h-40 overflow-auto">
                         {execution.output}
                       </pre>
                     </div>
                   )}
                   
                   {execution.error && (
-                    <div style={{ marginTop: '10px' }}>
-                      <strong style={{ color: 'red' }}>Error:</strong>
-                      <pre style={{
-                        background: '#ffe0e0',
-                        padding: '10px',
-                        borderRadius: '4px',
-                        marginTop: '5px',
-                        fontSize: '12px',
-                        overflow: 'auto',
-                        color: 'red'
-                      }}>
+                    <div className="mt-2">
+                      <strong className="text-red-600">Error:</strong>
+                      <pre className="bg-red-100 p-3 rounded-md mt-1 text-sm text-red-800 max-h-40 overflow-auto">
                         {execution.error}
                       </pre>
                     </div>
