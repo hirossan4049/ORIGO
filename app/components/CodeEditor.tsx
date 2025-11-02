@@ -46,17 +46,17 @@ export function CodeEditor({ fileId, initialContent, language, onContentChange }
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between p-2 bg-gray-100 border-b border-gray-200">
+    <div className="flex flex-col h-full bg-white">
+      <div className="flex items-center justify-between p-2 border-b border-gray-200">
         <h2 className="text-sm font-medium">File ID: {fileId}</h2>
-        <Button onClick={handleSave} size="sm" disabled={saving}>
+        <Button onClick={handleSave} size="sm" disabled={saving} variant="secondary">
           {saving ? "Saving..." : "Save"}
         </Button>
       </div>
       <MonacoEditor
         height="100%"
         language={language === 'typescript' ? 'typescript' : 'javascript'}
-        theme="vs-light"
+        theme="vs-dark"
         value={content}
         onChange={handleEditorChange}
         options={{

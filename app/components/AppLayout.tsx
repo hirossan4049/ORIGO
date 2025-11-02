@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { AppHeader } from "./AppHeader";
-import { AppSidebar } from "./AppSidebar";
+import { ProjectListNav } from "./ProjectListNav";
+import { FileListNav } from "./FileListNav";
 import { SettingsPanel } from "./SettingsPanel";
 
 interface AppLayoutProps {
   children: React.ReactNode;
   onRunClick?: () => void;
   projectId?: string;
-  projectName?: string; // Add projectName prop
+  projectName?: string;
 }
 
 export function AppLayout({ children, onRunClick, projectId, projectName }: AppLayoutProps) {
@@ -18,8 +19,9 @@ export function AppLayout({ children, onRunClick, projectId, projectName }: AppL
   return (
     <div className="min-h-screen bg-white">
       <AppHeader onSettingsClick={() => setSettingsOpen(true)} onRunClick={onRunClick} projectName={projectName} />
-      <AppSidebar />
-      <main className="pl-64 pt-14">
+      <ProjectListNav />
+      {projectId && <FileListNav projectId={projectId} />}
+      <main className={`pt-14 ${projectId ? 'pl-[32rem]' : 'pl-64'}`}>
         {children}
       </main>
       <SettingsPanel isOpen={isSettingsOpen} onClose={() => setSettingsOpen(false)} projectId={projectId} />
